@@ -1,6 +1,6 @@
-defmodule OtpTest do
+defmodule OTPTest do
   use ExUnit.Case
-  doctest Otp
+  doctest OTP
 
   test "the truth" do
     assert 1 + 1 == 2

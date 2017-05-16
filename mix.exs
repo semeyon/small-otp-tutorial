@@ -1,4 +1,4 @@
-defmodule Otp.Mixfile do
+defmodule OTP.Mixfile do
   use Mix.Project
 
   def project do

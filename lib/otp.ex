@@ -1,4 +1,4 @@
-defmodule Otp do
+defmodule OTP do
   @moduledoc """
   Documentation for Otp.
   """
@@ -8,7 +8,7 @@ defmodule Otp do
 
   ## Examples
 
-      iex> Otp.hello
+      iex> OTP.hello
       :world
 
   """
