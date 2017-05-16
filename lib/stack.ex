@@ -1,6 +1,7 @@
 defmodule Stack do
 
-    use GenServer
+    alias OTP.GenServer
+    # use GenServer
 
     ## PUBLIC
 
@@ -15,7 +16,6 @@ defmodule Stack do
     def pop(pid) do
         GenServer.call(pid, :pop)
     end
-
 
     ## CALLBACKS
 
