@@ -13,26 +13,27 @@ defmodule OTP.Echo do
         Kernel.send(pid, {msg, self()})
     end
 
-    # @loop_timeout 10
-    # @sync_send_timeout 200
+    @loop_timeout 10
+    @sync_send_timeout 200
 
     def sync_send(pid, msg) do
         async_send(pid, msg)
         receive do
             msg -> msg
+        after
+            @sync_send_timeout -> {:error, :timeout}
         end
     end
 
     def loop do
         receive do
-            {:no_replay, _caller} -> 
+            {:no_reply, _caller} ->
                 loop()
             {msg, caller} ->
                 Kernel.send(caller, msg)
                 loop()
-        after
-            10 ->
-                exit(:normal)
+            after
+                @loop_timeout -> :normal
         end
     end
 
