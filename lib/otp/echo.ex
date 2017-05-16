@@ -5,21 +5,19 @@ defmodule OTP.Echo do
         {:ok, pid}
     end
 
-    def send(pid, msg) do
-        Kernel.send(pid, {msg, self()})
-    end
-
     def async_send(pid, msg) do
-        Kernel.send(pid, {msg, self()})
+        ref = make_ref()
+        Kernel.send(pid, {ref, self(), msg})
+        ref
     end
 
     @loop_timeout 10
     @sync_send_timeout 200
 
     def sync_send(pid, msg) do
-        async_send(pid, msg)
+        ref = async_send(pid, msg)
         receive do
-            msg -> msg
+            {^ref, msg} -> msg
         after
             @sync_send_timeout -> {:error, :timeout}
         end
@@ -27,10 +25,13 @@ defmodule OTP.Echo do
 
     def loop do
         receive do
-            {:no_reply, _caller} ->
+            {_ref, _caller, :no_reply} ->
                 loop()
-            {msg, caller} ->
-                Kernel.send(caller, msg)
+            {ref, caller, :long_computation} ->
+                Process.sleep (@sync_send_timeout + 1)
+                Kernel.send(caller, {ref, :long_computation})
+            {ref, caller, msg} ->
+                Kernel.send(caller, {ref, msg})
                 loop()
             after
                 @loop_timeout -> :normal
