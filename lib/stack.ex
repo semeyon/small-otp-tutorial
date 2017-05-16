@@ -1,12 +1,13 @@
 defmodule Stack do
 
     alias OTP.GenServer
+    # use OTP.GenServer
     # use GenServer
 
     ## PUBLIC
 
     def start_link(initial) do
-        GenServer.start_link(__MODULE__, initial)
+        GenServer.start_link(__MODULE__, initial, %{name: :stack})
     end
 
     def push(pid, element) do

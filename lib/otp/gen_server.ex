@@ -1,8 +1,24 @@
 defmodule OTP.GenServer do
 
-    def start_link(mod, loopdata) do
-        pid = spawn_link(__MODULE__, :loop, [mod, loopdata])
-        {:ok, pid}
+
+    defmacro __using__(_opts) do
+        quote do
+            @behaviour OTP.GenServer
+        end
+    end
+
+    def start_link(mod, loopdata, opts \\ []) do
+        case Map.get(opts, :name) do
+            nil ->
+                pid = spawn_link(__MODULE__, :loop, [mod, loopdata])
+                {:ok, pid}
+            name when is_atom(name) ->
+                pid = spawn_link(__MODULE__, :loop, [mod, loopdata])
+                Process.register(pid, name)
+                {:ok, pid}
+            _invalid_name ->
+                {:error, :invalid_name}
+        end
     end
 
     def cast(server, msg) do
