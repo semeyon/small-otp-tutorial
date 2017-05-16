@@ -1,6 +1,5 @@
 defmodule OTP.EchoTest do
     use ExUnit.Case
-    import Logger
     alias OTP.Echo
 
     test "timeout" do
